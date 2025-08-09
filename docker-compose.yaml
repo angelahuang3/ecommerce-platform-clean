@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  account-service:
+    build: ./account-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/accounts
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - JWT_SECRET=8MnKEjVM0ziVx5Bc9dHZcBgatpUtC7h9PB19ofa0GMK93OSb1DGbJtIy1Zj0DzrY
+    depends_on:
+      - mysql
+
+  item-service:
+    build: ./item-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/item
+      - JWT_SECRET=8MnKEjVM0ziVx5Bc9dHZcBgatpUtC7h9PB19ofa0GMK93OSb1DGbJtIy1Zj0DzrY
+
+  cassandra:
+    image: cassandra:4.1.3
+    container_name: cassandra
+    ports: [ "9042:9042" ]
+    environment:
+      - CASSANDRA_CLUSTER_NAME=dev-cluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_SEEDS=cassandra
+      - CASSANDRA_LISTEN_ADDRESS=auto
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=cassandra
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    healthcheck:
+      test: [ "CMD-SHELL","cqlsh 127.0.0.1 9042 -e 'SHOW VERSION;' || exit 1" ]
+      interval: 15s
+      timeout: 10s
+      retries: 40
+      start_period: 90s
+
+  cassandra-init:
+    image: cassandra:4.1.3
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    entrypoint: [ "sh","-lc" ]
+    command: >
+      echo "Ensuring keyspace 'orders'..." &&
+      until cqlsh cassandra 9042 -e "CREATE KEYSPACE IF NOT EXISTS orders WITH replication = {'class':'SimpleStrategy','replication_factor':1};";
+      do echo "Cassandra not ready, retry in 3s..."; sleep 3; done &&
+      echo "Keyspace 'orders' ready."
+    restart: "no"
+
+  order-service:
+    build: ./order-service
+    ports: [ "8083:8083" ]
+    depends_on:
+      cassandra:
+        condition: service_healthy
+      cassandra-init:
+        condition: service_completed_successfully
+    environment:
+      - SERVER_PORT=8083
+      - JWT_SECRET=8MnKEjVM0ziVx5Bc9dHZcBgatpUtC7h9PB19ofa0GMK93OSb1DGbJtIy1Zj0DzrY
+
+  # payment-service:
+  #   build: ./payment-service
+  #   ports:
+  #     - "8084:8084"
+  #   depends_on:
+  #     - kafka
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: accounts
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    # Optional persistence:
+    # volumes:
+    #   - mongo_data:/data/db
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: bitnami/kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+#      - KAFKA_CFG_NODE_ID=1
+#      - KAFKA_CFG_PROCESS_ROLES=broker
+#      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+#      - KAFKA_KRAFT_CLUSTER_ID=my-cluster-id
+#      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+#      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+#      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=no
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+volumes:
+  mysql_data:
+  cassandra_data:
+  kafka_data:
+  # mongo_data:

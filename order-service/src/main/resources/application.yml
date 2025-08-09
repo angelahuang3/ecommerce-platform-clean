@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: order-service
+
+  cassandra:
+    contact-points: cassandra
+    port: 9042
+    local-datacenter: dc1
+    keyspace-name: orders
+    schema-action: create_if_not_exists   # creates tables, not the keyspace
+    connection:
+      connect-timeout: 30s
+      init-query-timeout: 30s
+    request:
+      timeout: 15s
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+
+server:
+  port: 8083
+  address: 0.0.0.0
+
+jwt:
+  secret: "${JWT_SECRET:defaultSecret}"
+
+logging:
+  level:
+    com.datastax.oss.driver: INFO
+
+# Optional: explicit driver bits (auth disabled)
+datastax-java-driver:
+  advanced:
+    auth-provider:
+      class: none
+  basic:
+    load-balancing-policy:
+      local-datacenter: dc1
