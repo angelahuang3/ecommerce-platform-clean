@@ -17,8 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
     
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {

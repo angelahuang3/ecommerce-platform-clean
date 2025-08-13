@@ -8,6 +8,7 @@ import com.example.orderservice.entity.Order;
 import com.example.orderservice.kafka.OrderEventPublisher;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,9 +21,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private OrderRepository orderRepository;
-    private ItemClient itemClient;
-    private OrderEventPublisher orderEventPublisher;
+    private final OrderRepository orderRepository;
+    private final ItemClient itemClient;
+    private final OrderEventPublisher orderEventPublisher;
 
     public Order createOrder(OrderRequest request) {
         validateOrderRequest(request);

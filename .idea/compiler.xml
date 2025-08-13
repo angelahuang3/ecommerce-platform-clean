@@ -26,6 +26,8 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
+        <module name="account-service" />
+        <module name="item-service" />
         <module name="payment-service" />
       </profile>
     </annotationProcessing>

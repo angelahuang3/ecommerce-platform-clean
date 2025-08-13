@@ -1,5 +1,7 @@
 package com.example.orderservice.entity;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
@@ -14,7 +16,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@Table("orders")
+@Table("orders")
 public class Order {
     @PrimaryKey
     private UUID id;
@@ -25,7 +27,10 @@ public class Order {
     private Map<String, Integer> itemQuantities;
 
     private double totalAmount;
-    private String status;  // Created, Canceled, Paid, Completed
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -5,7 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8531a5e-db2f-4543-82e1-1a7cb7ee49a4" name="Changes" comment="First Setup">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/AstraCassandraConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Status.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/resources/secure-connect-ecom-db.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/src/test/java/com/example/accountservice/AccountServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/test/java/com/example/accountservice/AccountServiceApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cassandra-init/01-keyspace.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/test/java/com/example/orderservice/OrderServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/test/java/com/example/orderservice/OrderServiceApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/test/java/com/example/paymentservice/PaymentServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/test/java/com/example/paymentservice/PaymentServiceApplicationTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +111,8 @@
       <recent name="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/order-service/src/main/resources" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/order-service" />
       <recent name="$PROJECT_DIR$/cassandra-init.cql" />
       <recent name="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/client" />
@@ -165,6 +187,11 @@
       <workItem from="1754278257660" duration="62486000" />
       <workItem from="1754550687454" duration="32463000" />
       <workItem from="1754724153445" duration="1139000" />
+      <workItem from="1754872088079" duration="215000" />
+      <workItem from="1755056253766" duration="1042000" />
+      <workItem from="1755057683697" duration="10614000" />
+      <workItem from="1755118732747" duration="3803000" />
+      <workItem from="1755125155293" duration="2967000" />
     </task>
     <task id="LOCAL-00001" summary="First Setup">
       <option name="closed" value="true" />
