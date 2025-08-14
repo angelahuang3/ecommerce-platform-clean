@@ -1,9 +1,9 @@
 package com.example.orderservice.entity;
 
 public enum Status {
-    CREATED,
-    PROCESSING,
+    PENDING,
     UPDATED,
+    CANCELLED,
     COMPLETED,
-    CANCELLED;
+    PAID;
 }

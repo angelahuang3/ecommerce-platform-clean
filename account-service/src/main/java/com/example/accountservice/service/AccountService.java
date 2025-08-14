@@ -24,7 +24,6 @@ public class AccountService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ------------------ Registration ------------------
     public UserResponse register(RegisterRequest request) {
         return userRepository.findByEmail(request.getEmail())
                 .map(this::toUserResponse) // Idempotent: return existing user
@@ -41,7 +40,6 @@ public class AccountService implements UserDetailsService {
                 });
     }
 
-    // ------------------ Update User ------------------
     public UserResponse updateUser(String email, UpdateRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
@@ -54,7 +52,7 @@ public class AccountService implements UserDetailsService {
         return toUserResponse(userRepository.save(user));
     }
 
-    // ------------------ Auth Support ------------------
+    // Auth Support
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
@@ -72,7 +70,6 @@ public class AccountService implements UserDetailsService {
         return authentication.getName();
     }
 
-    // ------------------ Helpers ------------------
     private UserResponse toUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())

@@ -1,16 +1,18 @@
 package com.example.orderservice.kafka;
 
 import com.example.orderservice.entity.Order;
-import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class OrderEventPublisher {
     private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    public OrderEventPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public void publishOrderCancelled(String orderId, String userEmail) {
         Map<String, Object> event = Map.of(

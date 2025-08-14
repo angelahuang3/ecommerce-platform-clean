@@ -8,5 +8,15 @@
       <schema-mapping />
       <load-sources>user_and_system_sources</load-sources>
     </data-source>
+    <data-source name="accounts@mysql" uuid="432129b8-49d4-49f3-bdef-f07c6f775f95">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" />
+      <user-name>root</user-name>
+      <schema-mapping />
+      <load-sources>user_and_system_sources</load-sources>
+    </data-source>
+    <data-source name="item@mongodb" uuid="464512a5-d89f-4044-ae6f-1c2f2c70384e">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MONGO" />
+      <schema-mapping />
+    </data-source>
   </component>
 </project>

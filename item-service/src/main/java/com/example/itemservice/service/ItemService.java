@@ -20,10 +20,11 @@ public class ItemService {
            Item item = itemRepository.findById(itemId)
                    .orElseThrow(() -> new RuntimeException("item not found"));
 
-           if(item.getInventory() < qty){
+           if(item.getStock() < qty){
                throw new  RuntimeException("insufficient inventory");
            }
-           item.setInventory(item.getInventory() - qty);
+           item.setStock(item.getStock() - qty);
+           item.setStock(item.getStock() - qty);
            itemRepository.save(item);
         });
     }
