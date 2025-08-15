@@ -5,7 +5,7 @@ import com.example.orderservice.dto.PaymentResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name="payment-service", url = "${payment.service.url:http://item-service:8082}")
+@FeignClient(name="payment-service", url = "${payment.service.url:http://payment-service:8084}", configuration = com.example.orderservice.config.FeignAuthConfig.class)
 public interface PaymentClient {
     @PostMapping("/api/payments")
     PaymentResponse pay(@RequestHeader("Idempotency-Key") String idemKey, @RequestBody PaymentRequest request);

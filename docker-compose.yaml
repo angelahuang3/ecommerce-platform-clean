@@ -74,7 +74,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - ITEM_SERVICE_URL=http://item-service:8082
-      - PAYMENT_SERVICE_URL=http://payment-service:8082
+      - PAYMENT_SERVICE_URL=http://payment-service:8084
 #      - ASTRA_CLIENT_ID=${ASTRA_CLIENT_ID}
 #      - ASTRA_CLIENT_SECRET=${ASTRA_CLIENT_SECRET}
   payment-service:

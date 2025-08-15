@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "payments")
 public class Payment {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable=false, unique=true)
