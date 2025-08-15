@@ -5,5 +5,6 @@ public enum Status {
     UPDATED,
     CANCELLED,
     COMPLETED,
-    PAID;
+    PAID,
+    PAYMENT_FAILED;
 }

@@ -22,19 +22,18 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
         return ResponseEntity.ok(orderService.createOrder(orderRequest));
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Order> updateOrder(@PathVariable String id, @RequestBody OrderUpdateRequest request) {
-//        return ResponseEntity.ok(orderService.updateOrder(id, request));
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable String id, @RequestBody OrderUpdateRequest request) {
+        return ResponseEntity.ok(orderService.updateOrder(id, request));
+    }
 
     @PostMapping("/{id}/cancel")
     public ResponseEntity<Order> cancelOrder(@PathVariable String id) {
-        orderService.cancelOrder(id);
         return ResponseEntity.ok(orderService.cancelOrder(id));
     }
 
@@ -46,5 +45,12 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @PostMapping("/{id}/pay")
+    public ResponseEntity<Order> pay(@PathVariable String id,
+                                     @RequestParam String method,
+                                     @RequestHeader("Idempotency-Key") String idemKey) {
+        return ResponseEntity.ok(orderService.pay(id, method, idemKey));
     }
 }

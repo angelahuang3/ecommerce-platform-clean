@@ -1,10 +1,10 @@
 package com.example.orderservice.service;
 
-import com.example.orderservice.dto.ItemResponse;
+import com.example.orderservice.client.PaymentClient;
+import com.example.orderservice.dto.*;
 import com.example.orderservice.client.ItemClient;
-import com.example.orderservice.dto.OrderRequest;
-import com.example.orderservice.dto.InventoryAdjustmentRequest;
 import com.example.orderservice.entity.Order;
+import com.example.orderservice.entity.PaymentStatus;
 import com.example.orderservice.entity.Status;
 import com.example.orderservice.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemClient itemClient;
+    private final PaymentClient paymentClient;
 
-    public OrderService(OrderRepository orderRepository, ItemClient itemClient) {
+    public OrderService(OrderRepository orderRepository, ItemClient itemClient, PaymentClient paymentClient) {
         this.orderRepository = orderRepository;
         this.itemClient = itemClient;
+        this.paymentClient = paymentClient;
     }
 
     public Order createOrder(OrderRequest request) {
@@ -63,7 +65,7 @@ public class OrderService {
                     .map(e -> new InventoryAdjustmentRequest.ItemQuantity(e.getKey(), e.getValue()))
                     .toList();
             // Update items to reserve
-            itemClient.reserve(new InventoryAdjustmentRequest(order.getId().toString(), items));
+            itemClient.reserve(new InventoryAdjustmentRequest(order.getId(), items));
             order.setStatus(Status.PENDING);
             order.setUpdatedAt(LocalDateTime.now());
             orderRepository.save(order);
@@ -74,51 +76,99 @@ public class OrderService {
         return order;
     }
 
-//    public Order updateOrder(UUID id, OrderUpdateRequest request) {
-//        if (id == null || request == null) {
-//            throw new IllegalArgumentException("Order ID and update request must not be null");
-//        }
-//
-//        Order order = orderRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
-//
-//        if (!CollectionUtils.isEmpty(request.getItemQuantities())) {
-//            order.setItemQuantities(request.getItemQuantities());
-//        }
-//
-//        if (request.getTotalAmount() > 0) {
-//            order.setTotalAmount(request.getTotalAmount());
-//        }
-//
-//        order.setStatus(Status.UPDATED);
-//        order.setUpdatedAt(LocalDateTime.now());
-//        return orderRepository.save(order);
-//    }
-//    public Order pay(UUID orderId, PaymentRequest req) {
-//        Order order = orderRepository.findById(orderId)
-//                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
-//        if (order.getStatus() != Status.PENDING_PAYMENT) {
-//            throw new IllegalStateException("Order not in payable state");
-//        }
-//
-//        // 4) 呼叫付款（冪等 key 由前端或你生成）
-//        PaymentResponse pr = paymentClient.pay(
-//                new PaymentRequest(orderId.toString(), order.getTotalAmount(), req.getMethod(), req.getIdempotencyKey())
-//        );
-//
-//        if ("SUCCESS".equals(pr.getStatus())) {
-//            // 5) 轉正庫存（commit）
-//            itemClient.commit(Map.of("orderId", orderId.toString()));
-//            order.setStatus(Status.PAID);
-//        } else {
-//            // 6) 釋放庫存（release）
-//            itemClient.release(Map.of("orderId", orderId.toString()));
-//            order.setStatus(Status.PAYMENT_FAILED);
-//        }
-//
-//        order.setUpdatedAt(LocalDateTime.now());
-//        return orderRepository.save(order);
-//    }
+    public Order updateOrder(String id, OrderUpdateRequest orderUpdateRequest) {
+        if (id == null) throw new IllegalArgumentException("Order ID must not be null");
+        if (orderUpdateRequest.getItemQuantities() == null || orderUpdateRequest.getItemQuantities().isEmpty())
+            throw new IllegalArgumentException("At least one item is required");
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
+
+        // User can only update pending order
+        if (order.getStatus() != Status.PENDING && order.getStatus() != Status.UPDATED) {
+            throw new IllegalStateException("Only PENDING/UPDATED orders can be updated");
+        }
+
+        // calculate item quantity
+        Map<String, Integer> oldQ = order.getItemQuantities();
+        // initialize two hashmap to calculate increment/decrement
+        Map<String, Integer> inc = new java.util.HashMap<>();
+        Map<String, Integer> dec = new java.util.HashMap<>();
+
+        // compare difference with original order item  and quantity
+        for (var e : orderUpdateRequest.getItemQuantities().entrySet()) {
+            String itemId = e.getKey();
+            int newQty = e.getValue();
+            int oldQty = oldQ.getOrDefault(itemId, 0);
+            int diff = newQty - oldQty;
+            if (diff > 0) inc.put(itemId, diff);
+            if (diff < 0) dec.put(itemId, -diff);
+        }
+
+        for (var e : oldQ.entrySet()) {
+            String itemId = e.getKey();
+            if (!orderUpdateRequest.getItemQuantities().containsKey(itemId)) {
+                dec.put(itemId, e.getValue());
+            }
+        }
+
+        // Reserve
+        // Check the inventory
+        for(var e: inc.entrySet()) {
+            String itemId = e.getKey();
+            int addQty = e.getValue();
+            ItemResponse item = itemClient.getItemById(itemId);
+            if (item == null) throw new IllegalArgumentException("Item not found: " + itemId);
+            if (item.getStock() < addQty) {
+                throw new IllegalArgumentException("Insufficient inventory for item: " + itemId + ", need: " + addQty + ", available: " + item.getStock());
+            }
+        }
+        var incItems = inc.entrySet().stream()
+                .map(x -> new InventoryAdjustmentRequest.ItemQuantity(x.getKey(), x.getValue()))
+                .toList();
+        //itemClient.reserve(new InventoryAdjustmentRequest(order.getId(), incItems));
+
+        // Release
+        var decItems = dec.entrySet().stream()
+                .map(x -> new InventoryAdjustmentRequest.ItemQuantity(x.getKey(), x.getValue()))
+                .toList();
+        //itemClient.release(new InventoryAdjustmentRequest(order.getId(), decItems));
+
+        boolean reservedInc = false;
+        try {
+            if (!incItems.isEmpty()) {
+                itemClient.reserve(new InventoryAdjustmentRequest(order.getId(), incItems));
+                reservedInc = true;
+            }
+
+            if (!decItems.isEmpty()) {
+                itemClient.release(new InventoryAdjustmentRequest(order.getId(), decItems));
+            }
+        } catch (Exception ex) {
+            // reverse order
+            if (reservedInc) {
+                try {
+                    itemClient.release(new InventoryAdjustmentRequest(order.getId(), incItems));
+                } catch (Exception ignore) {
+                    System.err.println("Compensation release failed: " + ignore.getMessage());
+                }
+            }
+            throw new IllegalStateException("Update inventory failed: " + ex.getMessage(), ex);
+        }
+
+        BigDecimal total = BigDecimal.ZERO;
+        for (var e : orderUpdateRequest.getItemQuantities().entrySet()) {
+            ItemResponse item = itemClient.getItemById(e.getKey());
+            if (item == null) throw new IllegalArgumentException("Item not found: " + e.getKey());
+            total = total.add(BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(e.getValue())));
+        }
+
+        order.setItemQuantities(orderUpdateRequest.getItemQuantities());
+        order.setTotalAmount(total.doubleValue());
+        order.setStatus(Status.UPDATED);
+        order.setUpdatedAt(LocalDateTime.now());
+        return orderRepository.save(order);
+    }
 
     public Order cancelOrder(String id) {
         if (id == null) {
@@ -127,8 +177,8 @@ public class OrderService {
 
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
-
-        if (Status.CANCELLED.equals(order.getStatus())) {
+        System.out.println("canceled order: " + order.getId());
+        if (Status.CANCELLED.equals(order.getStatus())){
             throw new IllegalStateException("Order already cancelled");
         }
 
@@ -177,8 +227,41 @@ public class OrderService {
             throw new IllegalArgumentException("At least one item must be ordered");
         }
 
-//        if (request.getTotalAmount() <= 0) {
-//            throw new IllegalArgumentException("Total amount must be positive");
-//        }
     }
+
+    public Order pay(String orderId, String method, String idempotencyKey){
+        var order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        if (order.getStatus() != Status.PENDING && order.getStatus()!=Status.UPDATED)
+            throw new IllegalStateException("Order not in payable state");
+
+        PaymentRequest pr = new PaymentRequest();
+        pr.setOrderId(order.getId());
+        pr.setAmount(BigDecimal.valueOf(order.getTotalAmount()));
+        pr.setMethod(method);
+
+        var resp = paymentClient.pay(idempotencyKey, pr);
+
+        switch(resp.getStatus()) {
+            case SUCCESS:
+                itemClient.commit(new CommitReleaseRequest(orderId));
+                order.setStatus(Status.PAID);
+                order.setUpdatedAt(LocalDateTime.now());
+                return orderRepository.save(order);
+            case DUPLICATE:
+                return order;
+            default:
+                // pay failed -> release inventory
+                var items = order.getItemQuantities().entrySet().stream()
+                        .map(e -> new InventoryAdjustmentRequest.ItemQuantity(e.getKey(), e.getValue()))
+                        .toList();
+                itemClient.release(new InventoryAdjustmentRequest(orderId, items));
+
+                order.setStatus(Status.PAYMENT_FAILED);
+                order.setUpdatedAt(LocalDateTime.now());
+                return orderRepository.save(order);
+
+        }
+    }
+
 }

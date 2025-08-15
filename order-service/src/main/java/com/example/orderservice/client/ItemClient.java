@@ -1,5 +1,6 @@
 package com.example.orderservice.client;
 
+import com.example.orderservice.dto.CommitReleaseRequest;
 import com.example.orderservice.dto.ItemResponse;
 import com.example.orderservice.dto.InventoryAdjustmentRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -16,7 +17,7 @@ public interface ItemClient {
     void reserve(@RequestBody InventoryAdjustmentRequest req);
 
     @PostMapping("/api/items/inventory/commit")
-    void commit(@RequestBody InventoryAdjustmentRequest req);
+    void commit(@RequestBody CommitReleaseRequest req);
 
     @PostMapping("/api/items/inventory/release")
     void release(@RequestBody InventoryAdjustmentRequest req);

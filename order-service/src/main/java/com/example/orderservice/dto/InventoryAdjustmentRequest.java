@@ -21,7 +21,8 @@ public class InventoryAdjustmentRequest {
 
     public InventoryAdjustmentRequest() {}
     public InventoryAdjustmentRequest(String orderId, List<ItemQuantity> items) {
-        this.orderId = orderId; this.items = items;
+        this.orderId = orderId;
+        this.items = items;
     }
 
     public String getOrderId() {

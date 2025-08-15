@@ -23,7 +23,7 @@ public class Order {
     private double totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 32)
+    @Column(nullable = false)
     private Status status;
 
     private LocalDateTime createdAt;

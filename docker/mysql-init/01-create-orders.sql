@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS orders CHARACTER SET utf8mb4 COLLATE utf8mb4_unico
 CREATE DATABASE IF NOT EXISTS accounts CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root';
-GRANT ALL PRIVILEGES ON accounts.* O 'root'@'%';
-GRANT ALL PRIVILEGES ON orders.* O 'root'@'%';
+GRANT ALL PRIVILEGES ON accounts.* TO 'root'@'%';
+GRANT ALL PRIVILEGES ON orders.* TO 'root'@'%';
+GRANT ALL PRIVILEGES ON payments.* TO 'root'@'%';
 FLUSH PRIVILEGES;

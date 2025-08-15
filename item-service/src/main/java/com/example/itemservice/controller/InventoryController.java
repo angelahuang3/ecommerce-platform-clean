@@ -1,5 +1,6 @@
 package com.example.itemservice.controller;
 
+import com.example.itemservice.dto.CommitReleaseRequest;
 import com.example.itemservice.dto.InventoryAdjustmentRequest;
 import com.example.itemservice.service.InventoryService;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ public class InventoryController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/commit")
+    public ResponseEntity<?> commit(@RequestBody CommitReleaseRequest req) {
+        inventoryService.commit(req);
+        return ResponseEntity.ok().build();
+    }
     @PostMapping("/release")
     public ResponseEntity<?> release(@RequestBody InventoryAdjustmentRequest req) {
         inventoryService.release(req);

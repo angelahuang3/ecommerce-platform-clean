@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   account-service:
     build: ./account-service
@@ -71,20 +69,26 @@ services:
 #      cassandra-init:
 #        condition: service_completed_successfully
     environment:
-      - SERVER_PORT=8083
       - JWT_SECRET=${JWT_SECRET}
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/orders
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - ITEM_SERVICE_URL=http://item-service:8082
+      - PAYMENT_SERVICE_URL=http://payment-service:8082
 #      - ASTRA_CLIENT_ID=${ASTRA_CLIENT_ID}
 #      - ASTRA_CLIENT_SECRET=${ASTRA_CLIENT_SECRET}
-  # payment-service:
-  #   build: ./payment-service
-  #   ports:
-  #     - "8084:8084"
-  #   depends_on:
-  #     - kafka
+  payment-service:
+     build: ./payment-service
+     ports: [ "8084:8084" ]
+     depends_on:
+       mysql:
+         condition: service_healthy
+     environment:
+       - JWT_SECRET=${JWT_SECRET}
+       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payments
+       - SPRING_DATASOURCE_USERNAME=root
+       - SPRING_DATASOURCE_PASSWORD=root
+#       - kafka
 
   mysql:
     image: mysql:8.0
@@ -94,7 +98,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: accounts
-#    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql-init:/docker-entrypoint-initdb.d

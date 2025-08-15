@@ -5,53 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8531a5e-db2f-4543-82e1-1a7cb7ee49a4" name="Changes" comment="First Setup">
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker/mysql-init/01-create-orders.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/controller/InventoryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/CommitReleaseRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/InventoryAdjustmentRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/ReserveRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/ReserveResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/entity/Reservation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/repository/ReservationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/service/InventoryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/client/PaymentClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/FeignAuthConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/InventoryAdjustmentRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/MapToJsonConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker/mysql-init/02-create-payments.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/CommitReleaseRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/PaymentRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/PaymentResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/PaymentStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/config/FeignAuthConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/config/JwtConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/config/JwtFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/controller/PaymentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/dto/PaymentRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/dto/PaymentResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/entity/Payment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/entity/PaymentStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/repository/PaymentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/service/PaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/example/accountservice/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/example/accountservice/service/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/test/java/com/example/accountservice/AccountServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/test/java/com/example/accountservice/AccountServiceApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/mysql-init/01-create-orders.sql" beforeDir="false" afterPath="$PROJECT_DIR$/docker/mysql-init/01-create-orders.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/item-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/controller/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/controller/ItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/ItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/ItemResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/entity/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/entity/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/service/ItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/service/ItemService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/mysql-init/init.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/controller/InventoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/controller/InventoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/CommitReleaseRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/dto/CommitReleaseRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/service/InventoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/src/main/java/com/example/itemservice/service/InventoryService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/client/ItemClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/client/ItemClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/AstraCassandraConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/AstraCassandraConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/client/PaymentClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/client/PaymentClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/ItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/ItemResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/OrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/OrderRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/OrderUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/OrderUpdateRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/InventoryAdjustmentRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/InventoryAdjustmentRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Order.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Status.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/entity/Status.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/kafka/OrderEventPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/kafka/OrderEventPublisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/repository/OrderRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/service/OrderService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +52,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -113,7 +104,7 @@
     "SHELLCHECK.PATH": "/Users/tzuhaocheng/Library/Application Support/JetBrains/IntelliJIdea2025.1/plugins/Shell Script/shellcheck",
     "Spring Boot.AccountServiceApplication.executor": "Run",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/tzuhaocheng/Desktop/chuwa/ecommerce-platform/order-service/src/main/java/com/example/orderservice",
+    "last_opened_file_path": "/Users/tzuhaocheng/Desktop/chuwa/ecommerce-platform/order-service/src/main/java/com/example/orderservice/dto",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -135,6 +126,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto" />
+      <recent name="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice" />
       <recent name="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -148,8 +141,11 @@
       <recent name="com.example.accountservice.service" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.example.itemservice.dto" />
+      <recent name="com.example.paymentservice.dto" />
+      <recent name="com.example.paymentservice.entity" />
       <recent name="com.example.orderservice.dto" />
+      <recent name="com.example.orderservice.entity" />
+      <recent name="com.example.itemservice.dto" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -223,7 +219,8 @@
       <workItem from="1755134577374" duration="286000" />
       <workItem from="1755136457794" duration="1229000" />
       <workItem from="1755139741223" duration="4805000" />
-      <workItem from="1755144799116" duration="25990000" />
+      <workItem from="1755144799116" duration="36913000" />
+      <workItem from="1755221408410" duration="8804000" />
     </task>
     <task id="LOCAL-00001" summary="First Setup">
       <option name="closed" value="true" />
@@ -238,6 +235,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First Setup" />

@@ -1,11 +1,18 @@
 package com.example.orderservice.client;
 
+import com.example.orderservice.dto.PaymentRequest;
+import com.example.orderservice.dto.PaymentResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-//@FeignClient(name="payment-service", url = "${PAYMENT_SERVICE_URL}")
+@FeignClient(name="payment-service", url = "${payment.service.url:http://item-service:8082}")
 public interface PaymentClient {
-//    @PostMapping("/api/payments")
-//    PaymentResponse pay(@RequestBody PaymentRequest request);
+    @PostMapping("/api/payments")
+    PaymentResponse pay(@RequestHeader("Idempotency-Key") String idemKey, @RequestBody PaymentRequest request);
+
+    @GetMapping("/api/payments/{orderId}")
+    PaymentResponse getByOrderId(@PathVariable String orderId);
+
+    @PostMapping("/api/payments/{id}/refund")
+    PaymentResponse refund(@PathVariable("id") String paymentId);
 }

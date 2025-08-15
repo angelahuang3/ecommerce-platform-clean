@@ -1,5 +1,6 @@
 package com.example.itemservice.service;
 
+import com.example.itemservice.dto.CommitReleaseRequest;
 import com.example.itemservice.dto.InventoryAdjustmentRequest;
 import com.example.itemservice.entity.Item;
 import com.example.itemservice.entity.Reservation;
@@ -47,6 +48,21 @@ public class InventoryService {
                 .collect(Collectors.toMap(InventoryAdjustmentRequest.ItemQuantity::getItemId,
                         InventoryAdjustmentRequest.ItemQuantity::getQuantity));
         reservationRepository.save(new Reservation(req.getOrderId(), map, "RESERVED"));
+    }
+
+    @Transactional
+    public void commit(CommitReleaseRequest req) {
+        Reservation reservation = reservationRepository.findById(req.getOrderId())
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found: " + req.getOrderId()));
+        if("COMMITTED".equals(reservation.getStatus())) return; //Idempotency
+
+        for(var e: reservation.getItemQuantities().entrySet()){
+            Item it =  itemRepository.findById(e.getKey()).orElseThrow(() -> new IllegalArgumentException("Item not found: " + e.getKey()));
+            it.setReserved(it.getReserved() - e.getValue());
+            itemRepository.save(it);
+        }
+        reservation.setStatus("COMMITTED");
+        reservationRepository.save(reservation);
     }
 
     @Transactional
