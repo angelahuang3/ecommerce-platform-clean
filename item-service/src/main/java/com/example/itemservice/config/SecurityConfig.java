@@ -22,6 +22,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/items/inventory/**").permitAll()     //temporary
                         .requestMatchers("/api/items/**").authenticated()
                         .anyRequest().permitAll()
                 )

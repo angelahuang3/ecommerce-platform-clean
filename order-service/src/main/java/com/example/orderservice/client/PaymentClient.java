@@ -14,5 +14,5 @@ public interface PaymentClient {
     PaymentResponse getByOrderId(@PathVariable String orderId);
 
     @PostMapping("/api/payments/{id}/refund")
-    PaymentResponse refund(@PathVariable("id") String paymentId);
+    PaymentResponse refund(@RequestHeader("Idempotency-Key") String idemKey, @PathVariable("id") String paymentId);
 }

@@ -6,5 +6,6 @@ public enum Status {
     CANCELLED,
     COMPLETED,
     PAID,
-    PAYMENT_FAILED;
+    PAYMENT_FAILED,
+    REFUNDED;
 }

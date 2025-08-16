@@ -20,8 +20,8 @@ public class PaymentController {
     }
 
     @PostMapping("/{id}/refund")
-    public ResponseEntity<PaymentResponse> refund(@PathVariable String id) {
-        return ResponseEntity.ok(paymentService.refund(id));
+    public ResponseEntity<PaymentResponse> refund(@RequestHeader("Idempotency-Key") String idemKey, @PathVariable String id) {
+        return ResponseEntity.ok(paymentService.refund(idemKey, id));
     }
 
     @GetMapping("/{orderId}")

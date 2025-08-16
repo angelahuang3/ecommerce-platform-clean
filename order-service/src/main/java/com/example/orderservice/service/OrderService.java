@@ -7,6 +7,8 @@ import com.example.orderservice.entity.Order;
 import com.example.orderservice.entity.PaymentStatus;
 import com.example.orderservice.entity.Status;
 import com.example.orderservice.repository.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -18,7 +20,7 @@ import java.util.UUID;
 
 @Service
 public class OrderService {
-
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final ItemClient itemClient;
     private final PaymentClient paymentClient;
@@ -260,8 +262,65 @@ public class OrderService {
                 order.setStatus(Status.PAYMENT_FAILED);
                 order.setUpdatedAt(LocalDateTime.now());
                 return orderRepository.save(order);
-
         }
     }
 
+    // Handle event from payment service
+    public void handlePaymentEvent(PaymentEvent event) {
+        String orderId = event.getOrderId();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
+
+        System.out.print("ORDER STATUS: " + event.getStatus());
+
+        switch (event.getStatus()) {
+            case "PAID":
+            case "SUCCESS":
+                if (order.getStatus() != Status.PAID) {
+                    order.setStatus(Status.PAID);
+                    order.setUpdatedAt(LocalDateTime.now());
+                    orderRepository.save(order);
+                    log.info("Order {} status -> PAID (by payment event)", orderId);
+                } else {
+                    log.info("Order {} already PAID, skip", orderId);
+                }
+                break;
+
+            case "REFUNDED":
+                try {
+                    var items = order.getItemQuantities().entrySet().stream()
+                            .map(e -> new InventoryAdjustmentRequest.ItemQuantity(e.getKey(), e.getValue()))
+                            .toList();
+                    itemClient.release(new InventoryAdjustmentRequest(orderId, items));
+                } catch (Exception ex) {
+                    log.warn("Inventory restock on refund failed for order {}: {}", orderId, ex.getMessage());
+                }
+
+                order.setStatus(Status.REFUNDED);
+                order.setUpdatedAt(LocalDateTime.now());
+                orderRepository.save(order);
+                log.info("Order {} status -> REFUNDED (by payment event)", orderId);
+                break;
+
+            case "FAILED":
+                try {
+                    var items = order.getItemQuantities().entrySet().stream()
+                            .map(e -> new InventoryAdjustmentRequest.ItemQuantity(e.getKey(), e.getValue()))
+                            .toList();
+                    itemClient.release(new InventoryAdjustmentRequest(orderId, items));
+                } catch (Exception ex) {
+                    log.warn("Inventory release on failed payment for order {} failed: {}", orderId, ex.getMessage());
+                }
+
+                order.setStatus(Status.PAYMENT_FAILED);
+                order.setUpdatedAt(LocalDateTime.now());
+                orderRepository.save(order);
+                log.info("Order {} status -> PAYMENT_FAILED (by payment event)", orderId);
+                break;
+
+            default:
+                log.info("Order {} got unknown payment status '{}', skipping", orderId, event.getStatus());
+                break;
+        }
+    }
 }
