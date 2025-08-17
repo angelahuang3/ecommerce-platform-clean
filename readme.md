@@ -94,9 +94,8 @@ The system is composed of the following microservices:
 | `GET`  | `/api/payments/{orderId}` | Get payment by order ID |
 | `POST` | `/api/payments/refund` | Refund payment |
 
-> **Note**: Payment endpoints require an **Idempotency-Key** header to ensure safe retries.
->           All endpoints require bear token or it will get 401 or 402 forbidden.
-
+- Payment endpoints require an `Idempotency-Key` header to ensure safe retries and prevent duplicate processing. 
+- All endpoints except for register and login require a valid Bearer token for authentication. Requests without it will receive a `401 Unauthorized` or `403 Forbidden response`.
 
 ---
 
