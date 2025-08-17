@@ -40,8 +40,7 @@ The system is composed of the following microservices:
 
 - **Order Service**  
   Coordinates order creation, updates, and cancellations.  
-  Communicates with Item Service and Payment Service using **OpenFeign**.  
-
+  Communicates with Item Service and Payment Service using **OpenFeign**.
 
 - **Payment Service**  
   Processes payments, refunds, and enforces **idempotency**.  
@@ -50,6 +49,19 @@ The system is composed of the following microservices:
 ### Inter-Service Communication
 - **Synchronous:** REST calls via **OpenFeign** (e.g., Order → Item / Payment).
 - **Asynchronous:** Event-driven communication with **Kafka** for order/payment events. 
+
+- **OpenFeign:**
+  - Order → Item/Payment synchronous calls (`reserve`, `release`, `commit`, `pay`)
+  - Add a Feign `RequestInterceptor` to forward `Authorization` header between services.
+- **Kafka**
+  - Payment publishes `PaymentEvent (orderId, paymentId, status)` to `payment-events`
+  - Order consumes with `@KafkaListener` and updates status (`PAID`, `REFUNDED`, `PAYMENT_FAILED`)
+  - Default **at-least-once** semantics; consumer is idempotent via order status checks.
+- Idempotency
+  - Payments table enforces unique idempotency_key
+  - Service handles race with DataIntegrityViolationException → lookup existing and return DUPLICATE.
+- Error handling
+  - `@RestControllerAdvice` maps exceptions to **JSON** error model and correct HTTP codes.
 
 ---
 
@@ -60,8 +72,9 @@ The system is composed of the following microservices:
 |--------|----------|-------------|
 | `POST` | `/api/account/register` | Register a new user |
 | `POST` | `/api/account/login` | Authenticate user |
-| `GET`  | `/api/account/current` | Get current logged-in user |
+| `GET`  | `/api/account/me` | Get current logged-in user |
 | `PUT`  | `/api/account/update` | Update user details |
+
 
 ---
 
@@ -77,20 +90,20 @@ The system is composed of the following microservices:
 ---
 
 ### 🛒 Order Service
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/orders` | Create new order |
-| `GET`  | `/api/orders` | Get all orders |
-| `GET`  | `/api/orders/{id}` | Get order by ID |
-| `PUT`  | `/api/orders/{id}` | Update order |
-| `DELETE` | `/api/orders/{id}` | Cancel order |
+| Method | Endpoint                  | Description |
+|--------|---------------------------|-------------|
+| `POST` | `/api/orders`             | Create new order |
+| `GET`  | `/api/orders`             | Get all orders |
+| `GET`  | `/api/orders/{id}`        | Get order by ID |
+| `PUT`  | `/api/orders/{id}`        | Update order |
+| `POST` | `/api/orders/{id}/cancel` | Cancel order |
 
 ---
 
 ### 💳 Payment Service
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/payments/submit` | Submit a payment |
+| `POST` | `/api/payments` | Submit a payment |
 | `GET`  | `/api/payments/{orderId}` | Get payment by order ID |
 | `POST` | `/api/payments/refund` | Refund payment |
 
@@ -117,8 +130,8 @@ The system is composed of the following microservices:
 1. **Build services**
 
 ```bash
-   mvn clean package
-   mvn clean install
+mvn clean package
+mvn clean install
 ```
 
 2. Start Dockerized environment
